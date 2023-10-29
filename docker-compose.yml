@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  mysql:
+      image: mysql:8.0
+      # platform: linux/x86_64
+      container_name: tweets_mysql
+      environment:
+        MYSQL_ROOT_PASSWORD: password
+        MYSQL_DATABASE: tweets
+      volumes:
+        - dbdata:/var/lib/mysql
+      ports:
+        - 23306:3306
+  go:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      target: local
+    container_name: app
+    ports:
+      - 8080:8080
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    depends_on:
+      - mysql
+
+volumes:
+  dbdata:
