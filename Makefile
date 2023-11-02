@@ -47,3 +47,5 @@ seeds:
 # input test user data
 test_users:
 	docker-compose exec -T mysql mysql -uroot -proot musemo < db/test_users/users.sql
+
+# testyesy
