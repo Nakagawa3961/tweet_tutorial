@@ -6,7 +6,7 @@ import (
 	"github.com/ryuta06012/tweet_backend/src/repositories"
 )
 
-func userRouter(r *gin.Engine, mysqlHandler *repositories.MysqlRepository) {
+func UserRouter(r *gin.Engine, mysqlHandler *repositories.MysqlRepository) {
 	userRouter := r.Group("/user")
 	controller := controllers.NewUsersController(mysqlHandler)
 	{
