@@ -4,40 +4,30 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/ryuta06012/tweet_backend/src/models"
+	"github.com/ryuta06012/tweet_backend/src/repositories"
 	"github.com/ryuta06012/tweet_backend/src/usecases"
+	"github.com/ryuta06012/tweet_backend/src/views"
 )
 
 type TweetController struct {
-	TweetInteractor *usecases.TweetInteractor
+	interactor *usecases.TweetInteractor
 }
 
-func NewTweetController(interactor *usecases.TweetInteractor) *TweetController {
+func NewTweetController(mysqlHandler *repositories.MysqlRepository) *TweetController {
 	return &TweetController{
-		TweetInteractor: interactor,
+		interactor: usecases.NewTweetInteractor(mysqlHandler),
 	}
 }
 
-type Tweet struct {
-	Message string `json:"message" binding:"required"`
-}
-
-func (controller *TweetController) PostTweet(c *gin.Context) {
-	var newTweet Tweet
-
-	if err := c.ShouldBindJSON(&newTweet); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+func (t *TweetController) PostTweet(c *gin.Context) {
+	var request views.TweetRequest
+	if err := c.ShouldBindJSON(&request); err != nil {
+		views.ErrorResponse(c, http.StatusBadRequest, err)
 		return
 	}
-
-	tweetModel := &models.Tweet{
-		Message: newTweet.Message,
-	}
-
-	if err := controller.TweetInteractor.SaveTweet(tweetModel); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save tweet record"})
+	if err := t.interactor.CreateTweetsRecord(request); err != nil {
+		views.ErrorResponse(c, http.StatusInternalServerError, err)
 		return
 	}
-
-	c.JSON(http.StatusCreated, gin.H{"message": "Tweet successfully posted", "tweet": newTweet})
+	c.Status(http.StatusOK)
 }

@@ -1,5 +1,6 @@
 package views
 
 type TweetRequest struct {
-	Message string `json:"message" binding:"required"`
+	UserID int    `json:"userId" binding:"required"`
+	Text   string `json:"text" binding:"required"`
 }

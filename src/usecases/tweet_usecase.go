@@ -3,18 +3,24 @@ package usecases
 import (
 	"github.com/ryuta06012/tweet_backend/src/models"
 	"github.com/ryuta06012/tweet_backend/src/repositories"
+	"github.com/ryuta06012/tweet_backend/src/views"
 )
 
 type TweetInteractor struct {
 	TweetRepository *repositories.TweetRepository
 }
 
-func NewTweetInteractor(tweetRepo *repositories.TweetRepository) *TweetInteractor {
+func NewTweetInteractor(mysqlHandler *repositories.MysqlRepository) *TweetInteractor {
 	return &TweetInteractor{
-		TweetRepository: tweetRepo,
+		TweetRepository: repositories.NewTweetRepository(mysqlHandler),
 	}
 }
 
-func (interactor *TweetInteractor) SaveTweet(tweet *models.Tweet) error {
-	return interactor.TweetRepository.SaveTweet(tweet)
+func (t *TweetInteractor) CreateTweetsRecord(request views.TweetRequest) error {
+	tweet := models.NewTweet(request.UserID, request.Text)
+	err := t.TweetRepository.CreateTweetRecord(tweet)
+	if err != nil {
+		return err
+	}
+	return nil
 }

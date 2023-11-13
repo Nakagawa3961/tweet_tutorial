@@ -4,12 +4,13 @@ import "time"
 
 type Tweet struct {
 	ID        int
-	Message   string
+	UserID    int
+	Text      string
 	CreatedAt time.Time
 }
 
-func NewTweet(message string) *Tweet {
+func NewTweet(userID int, text string) *Tweet {
 	return &Tweet{
-		Message: message,
+		Text: text,
 	}
 }

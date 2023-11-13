@@ -9,19 +9,16 @@ type TweetRepository struct {
 	Client *gorm.DB
 }
 
-func NewTweetRepository(db *gorm.DB) *TweetRepository {
+func NewTweetRepository(mysqlHandler *MysqlRepository) *TweetRepository {
 	return &TweetRepository{
-		Client: db,
+		Client: mysqlHandler.Client,
 	}
 }
 
-func (repo *TweetRepository) SaveTweet(tweet *models.Tweet) error {
-
-	err := repo.Client.Create(tweet).Error
+func (t *TweetRepository) CreateTweetRecord(tweet *models.Tweet) error {
+	err := t.Client.Create(tweet).Error
 	if err != nil {
-
 		return err
 	}
-
 	return nil
 }
