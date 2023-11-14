@@ -9,8 +9,9 @@ type Tweet struct {
 	CreatedAt time.Time
 }
 
-func NewTweet(userID int, text string) *Tweet {
+func NewTweet(userId int, text string) *Tweet {
 	return &Tweet{
-		Text: text,
+		UserID: userId,
+		Text:   text,
 	}
 }
