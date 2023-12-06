@@ -18,6 +18,7 @@ func NewTweetInteractor(mysqlHandler *repositories.MysqlRepository) *TweetIntera
 
 func (t *TweetInteractor) CreateTweetsRecord(request views.TweetRequest) error {
 	tweet := models.NewTweet(request.UserID, request.Text)
+	fmt
 	err := t.TweetRepository.CreateTweetRecord(tweet)
 	if err != nil {
 		return err
